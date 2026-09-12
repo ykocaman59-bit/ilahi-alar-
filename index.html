@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dünya İlahi Arşivi</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>İlahi Pınarı</h1>
+            <input type="text" id="searchInput" placeholder="İlahi veya sanatçı ara (Örn: Sami Yusuf, Dursun Ali)...">
+            <button id="listAllBtn">İlahilerim (Alfabetik Sırala)</button>
+        </header>
+
+        <!-- Müzik Çalar Alanı -->
+        <div class="player-card">
+            <h3 id="currentTitle">İlahi Seçilmedi</h3>
+            <audio id="audioPlayer" controls></audio>
+        </div>
+
+        <!-- İlahi Listesi -->
+        <div class="list-container">
+            <ul id="ilahiList"></ul>
+        </div>
+    </div>
+    <script src="app.js"></script>
+</body>
+</html>
+
