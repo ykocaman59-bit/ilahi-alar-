@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Çocuklar İçin Elifba ve Kur'an Öğrenme</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Comic Sans MS', 'Arial', sans-serif; }
+        body { background: #f0f8ff; color: #333; padding: 15px; display: flex; justify-content: center; }
+        .container { width: 100%; max-width: 500px; background: #fff; padding: 20px; border-radius: 16px; box-shadow: 0 6px 16px rgba(0,0,0,0.1); border: 3px solid #ffeb3b; }
+        header { text-align: center; margin-bottom: 20px; }
+        header h1 { color: #ff5722; font-size: 22px; margin-bottom: 5px; }
+        header p { color: #607d8b; font-size: 14px; }
+        .tabs { display: flex; gap: 8px; margin-bottom: 20px; }
+        .tab-btn { flex: 1; padding: 10px; background: #e0f7fa; border: none; border-radius: 8px; font-weight: bold; color: #00796b; cursor: pointer; transition: 0.2s; }
+        .tab-btn.active { background: #00bcd4; color: #fff; }
+        .section { display: none; }
+        .section.active { display: block; }
+        
+        /* Harf Izgarası */
+        .grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; }
+        .letter-card { background: #fff9c4; border: 2px solid #fbc02d; border-radius: 12px; padding: 15px 5px; text-align: center; cursor: pointer; transition: transform 0.1s; }
+        .letter-card:active { transform: scale(0.95); }
+        .arabic { font-size: 32px; color: #d32f2f; margin-bottom: 5px; display: block; }
+        .name { font-size: 12px; color: #388e3c; font-weight: bold; }
+
+        /* Sureler Listesi */
+        .sure-item { background: #e8f5e9; border: 1px solid #c8e6c9; padding: 12px; border-radius: 10px; margin-bottom: 10px; cursor: pointer; }
+        .sure-item h3 { color: #2e7d32; font-size: 16px; margin-bottom: 4px; }
+        .sure-item p { color: #555; font-size: 13px; }
+
+        /* Bilgi Kutusu */
+        .info-box { background: #fff3e0; border: 2px dashed #ffb74d; padding: 12px; border-radius: 10px; text-align: center; margin-top: 20px; font-size: 14px; color: #e65100; min-height: 45px; display: flex; align-items: center; justify-content: center; }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <header>
+            <h1>Minikler İçin Elifba 🌟</h1>
+            <p>Dokun, Dinle ve Öğren!</p>
+        </header>
+
+        <div class="tabs">
+            <button class="tab-btn active" onclick="switchTab('harfler')">Elifba Harfleri</button>
+            <button class="tab-btn" onclick="switchTab('sureler')">Kısa Sureler</button>
+        </div>
+
+        <!-- Harfler Sekmesi -->
+        <div id="harfler" class="section active">
+            <div class="grid" id="letterGrid"></div>
+        </div>
+
+        <!-- Sureler Sekmesi -->
+        <div id="sureler" class="section">
+            <div id="sureList"></div>
+        </div>
+
+        <div class="info-box" id="infoBox">Öğrenmek istediğin harfe veya sureye dokun! 👇</div>
+    </div>
+
+    <script>
+        // Elifba Harfleri Veri Tabanı
+        const harfler = [
+            { ar: "ا", tr: "Elif", ses: "Elif" },
+            { ar: "ب", tr: "Be", ses: "Be" },
+            { ar: "ت", tr: "Te", ses: "Te" },
+            { ar: "ث", tr: "Se", ses: "Se" },
+            { ar: "ج", tr: "Cim", ses: "Cim" },
+            { ar: "ح", tr: "Ha", ses: "Ha" },
+            { ar: "خ", tr: "Hı", ses: "Hı" },
+            { ar: "د", tr: "Dal", ses: "Dal" },
+            { ar: "ذ", tr: "Zel", ses: "Zel" },
+            { ar: "ر", tr: "Ra", ses: "Ra" },
+            { ar: "ز", tr: "Ze", ses: "Ze" },
+            { ar: "س", tr: "Sin", ses: "Sin" },
+            { ar: "ش", tr: "Şın", ses: "Şın" },
+            { ar: "ص", tr: "Sad", ses: "Sad" },
+            { ar: "ض", tr: "Dad", ses: "Dad" },
+            { ar: "ط", tr: "Tı", ses: "Tı" },
+            { ar: "ظ", tr: "Zı", ses: "Zı" },
+            { ar: "ع", tr: "Ayın", ses: "Ayın" },
+            { ar: "غ", tr: "Gayın", ses: "Gayın" },
+            { ar: "ف", tr: "Fe", ses: "Fe" },
+            { ar: "ق", tr: "Kaf", ses: "Kaf" },
+            { ar: "ك", tr: "Kef", ses: "Kef" },
+            { ar: "ل", tr: "Lam", ses: "Lam" },
+            { ar: "م", tr: "Mim", ses: "Mim" },
+            { ar: "ن", tr: "Nun", ses: "Nun" },
+            { ar: "ه", tr: "He", ses: "He" },
+            { ar: "و", tr: "Vav", ses: "Vav" },
+            { ar: "ي", tr: "Ye", ses: "Ye" }
+        ];
+
+        // Kısa Sureler Veri Tabanı
+        const sureler = [
+            { ad: "Fatiha Suresi", aciklama: "Kuran-ı Kerim'in kalbidir." },
+            { ad: "İhlas Suresi", aciklama: "Allah'ın birliğini anlatır." },
+            { ad: "Felak Suresi", aciklama: "Kötülüklerden korunma suresidir." },
+            { ad: "Nas Suresi", aciklama: "İnsanların sığınağıdır." }
+        ];
+
+        const letterGrid = document.getElementById('letterGrid');
+        const sureList = document.getElementById('sureList');
+        const infoBox = document.getElementById('infoBox');
+
+        // Harfleri Ekrana Basma
+        harfler.forEach(h => {
+            const card = document.createElement('div');
+            card.className = 'letter-card';
+            card.innerHTML = `<span class="arabic">${h.ar}</span><span class="name">${h.tr}</span>`;
+            card.addEventListener('click', () => {
+                speak(h.ses);
+                infoBox.textContent = `Seçilen Harf: ${h.tr} (${h.ar})`;
+            });
+            letterGrid.appendChild(card);
+        });
+
+        // Sureleri Ekrana Basma
+        sureler.forEach(s => {
+            const item = document.createElement('div');
+            item.className = 'sure-item';
+            item.innerHTML = `<h3>${s.ad}</h3><p>${s.aciklama}</p>`;
+            item.addEventListener('click', () => {
+                speak(s.ad);
+                infoBox.textContent = `Dinleniyor: ${s.ad}`;
+            });
+            sureList.appendChild(item);
+        });
+
+        // Ses Sentezleyici (Tarayıcının Türkçe Ses Motoru)
+        function speak(text) {
+            if ('speechSynthesis' in window) {
+                window.speechSynthesis.cancel(); // Önceki sesi durdur
+                const utterance = new SpeechSynthesisUtterance(text);
+                utterance.lang = 'tr-TR';
+                utterance.rate = 0.9; // Çocuklar için biraz daha yavaş
+                window.speechSynthesis.speak(utterance);
+            }
+        }
+
+        // Sekme Değiştirme
+        function switchTab(tabName) {
+            document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+            
+            if (tabName === 'harfler') {
+                document.getElementById('harfler').classList.add('active');
+                event.target.classList.add('active');
+            } else {
+                document.getElementById('sureler').classList.add('active');
+                event.target.classList.add('active');
+            }
+        }
+    </script>
+</body>
+</html>
+
